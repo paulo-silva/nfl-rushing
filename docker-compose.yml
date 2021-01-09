@@ -1,0 +1,26 @@
+version: "3.3"
+services:
+  server:
+    build:
+      context: ./server
+    command: mix phx.server
+    volumes:
+      - ./server:/app:delegated
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+
+  client:
+    build:
+      context: ./client
+    command: npm start
+    volumes:
+      - ./client:/app:delegated
+    ports:
+      - "3000:3000"
+
+  postgres:
+    image: postgres:13.1
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
