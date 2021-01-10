@@ -2,7 +2,7 @@ defmodule ServerWeb.Router do
   use ServerWeb, :router
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug :accepts, ["json", "csv"]
   end
 
   scope "/api", ServerWeb do

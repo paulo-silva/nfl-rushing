@@ -34,7 +34,7 @@ defmodule Server.Fixtures do
         {:ok, player} =
           attrs
           |> Enum.into(@valid_attrs)
-          |> Players.create_player
+          |> Players.create_player()
 
         player
       end
@@ -45,7 +45,6 @@ defmodule Server.Fixtures do
   Apply the `fixtures`.
   """
   defmacro __using__(fixtures) when is_list(fixtures) do
-    for fixture <- fixtures, is_atom(fixture),
-      do: apply(__MODULE__, fixture, [])
+    for fixture <- fixtures, is_atom(fixture), do: apply(__MODULE__, fixture, [])
   end
 end
