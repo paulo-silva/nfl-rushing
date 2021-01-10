@@ -16,10 +16,59 @@ defmodule Server.Players do
       iex> list_players()
       [%Player{}, ...]
 
+      iex> sort_players_by("total_touchdowns", :desc) |> list_players()
+      [%Player{}, ...]
+
   """
-  def list_players do
-    Repo.all(Player)
+  def list_players(query \\ Player) do
+    Repo.all(query)
   end
+
+  @doc """
+  Build query to sort player by a sortable field.
+
+  ## Examples
+
+      iex> sort_players_by("total_touchdowns", :desc)
+      #Ecto.Query<from p0 in Player, order_by: [desc: p0.total_touchdowns]>
+  """
+
+  @sortable_fields ["longest_rush", "total_touchdowns", "total_yards"]
+  def sort_players_by(query, field, direction) when field in @sortable_fields do
+    get_players_ordered_by(query, field, direction)
+  end
+
+  def sort_players_by(query, _field, direction) do
+    get_players_ordered_by(query, "inserted_at", direction)
+  end
+
+  defp get_players_ordered_by(query, field, direction) do
+    field = String.to_existing_atom(field)
+
+    from(p in query, order_by: {^direction, ^field})
+  end
+
+  @doc """
+  Build query to paginate player records using given limit and offset.
+
+  ## Examples
+
+      iex> paginate_players(Player, 10, 0)
+      #Ecto.Query<from p0 in Server.Players.Player, limit: ^10, offset: ^0>
+  """
+  def paginate_players(query, limit, offset) do
+    from p in query,
+      limit: ^limit,
+      offset: ^offset
+  end
+
+  def filter_by_name(query, name) when not is_nil(name) and byte_size(name) > 0 do
+    searched_term = "%#{name}%"
+
+    from p in query, where: ilike(p.name, ^searched_term)
+  end
+
+  def filter_by_name(query, _name), do: query
 
   @doc """
   Gets a single player.
