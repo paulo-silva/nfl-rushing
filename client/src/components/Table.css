@@ -1,0 +1,27 @@
+.Table {
+  width: calc(100% - 60px);
+  margin: 0 auto;
+  color: #fff;
+  background-color: #424242;
+  border-spacing: 0px;
+}
+
+.Table > .TableHead .TableCell {
+  text-align: left;
+  background-color: #222;
+  font-weight: 500;
+}
+
+.Table > .TableHead .TableCell.TableCellSort {
+  cursor: pointer;
+  color: #008ff6;
+}
+
+.Table > .TableHead .TableCell:not(:first-child),
+.Table > .TableBody .TableCell:not(:first-child) {
+  text-align: right;
+}
+
+.Table .TableCell {
+  padding: 10px
+}

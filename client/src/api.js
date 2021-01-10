@@ -4,7 +4,7 @@ function filterPlayersByName(name) {
   loadPlayers({ name })
 }
 
-function loadPlayers(options = {}) {
+async function loadPlayers(options = {}, callback = null) {
   const endpoint = "/players"
   const queryString = new URLSearchParams({
     name: options['name'] || '',
@@ -12,13 +12,14 @@ function loadPlayers(options = {}) {
     sort_dir: options['sort_dir'] || 'asc',
     limit: options['limit'] || 30,
     offset: options['limit'] || 0
-  }).toString()
+  }).toString();
 
-  const url = `${API_HOST}${endpoint}?${queryString}`
+  const url = `${API_HOST}${endpoint}?${queryString}`;
+  const json = await fetch(url, { mode: 'cors' }).then(response => response.json());
 
-  fetch(url, { mode: 'cors' })
-    .then(res => res.ok ? res : Promise.reject(res))
-    .then(res => res.json())
+  callback && callback(json)
+
+  return json
 }
 
 export { filterPlayersByName, loadPlayers }
