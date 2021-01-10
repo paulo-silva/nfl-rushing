@@ -7,6 +7,8 @@ defmodule ServerWeb.Router do
 
   scope "/api", ServerWeb do
     pipe_through :api
+
+    resources "/players", PlayerController, only: [:index]
   end
 
   # Enables LiveDashboard only for development
