@@ -2,6 +2,7 @@ defmodule ServerWeb.Router do
   use ServerWeb, :router
 
   pipeline :api do
+    plug CORSPlug, origin: "http://localhost:3000"
     plug :accepts, ["json", "csv"]
   end
 
