@@ -52,6 +52,13 @@ defmodule SeedHelpers do
 end
 
 Enum.each(rushing_samples, fn player_data ->
+  # Extract touchdown info from Lng data, and save it in a separated column
+  [longest_rush, longest_rush_with_touchdown] =
+    case Integer.parse("#{player_data["Lng"]}") do
+      {lng, ""} -> [lng, false]
+      {lng, "T"} -> [lng, true]
+    end
+
   Players.create_player(%{
     name: player_data["Player"],
     team: player_data["Team"],
@@ -62,7 +69,8 @@ Enum.each(rushing_samples, fn player_data ->
     avg_yards_per_attempts: player_data["Avg"] |> SeedHelpers.convert_to_float(),
     yards_per_game: player_data["Yds/G"] |> SeedHelpers.convert_to_float(),
     total_touchdowns: player_data["TD"] |> SeedHelpers.convert_to_int(),
-    longest_rush: player_data["Lng"] |> SeedHelpers.convert_to_string(),
+    longest_rush: longest_rush,
+    longest_rush_with_touchdown: longest_rush_with_touchdown,
     first_down: player_data["1st"] |> SeedHelpers.convert_to_int(),
     first_down_ratio: player_data["1st%"] |> SeedHelpers.convert_to_float(),
     twenty_yards: player_data["20+"] |> SeedHelpers.convert_to_int(),

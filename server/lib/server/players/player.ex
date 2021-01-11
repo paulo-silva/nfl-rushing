@@ -18,7 +18,8 @@ defmodule Server.Players.Player do
     :total_touchdowns,
     :total_yards,
     :twenty_yards,
-    :yards_per_game
+    :yards_per_game,
+    :longest_rush_with_touchdown
   ]
 
   @derive {Jason.Encoder, only: @optional_fields ++ @required_fields}
@@ -30,7 +31,8 @@ defmodule Server.Players.Player do
     field(:first_down_ratio, :float)
     field(:fourty_yards, :integer)
     field(:fumbles, :integer)
-    field(:longest_rush, :string)
+    field(:longest_rush, :integer)
+    field(:longest_rush_with_touchdown, :boolean)
     field(:name, :string)
     field(:position, :string)
     field(:team, :string)
