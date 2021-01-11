@@ -1,5 +1,6 @@
 import { Component } from "react";
-import { filterPlayersByName, loadPlayers } from "../api";
+import download from 'downloadjs';
+import { filterPlayersByName, loadPlayers, generatePlayersCSV } from "../api";
 import Table from "./Table";
 import './Players.css';
 
@@ -13,7 +14,8 @@ class Players extends Component {
       sort_by: "",
       name: "",
       sort_dir: "asc",
-      players: []
+      players: [],
+      lastPage: false
     };
   }
 
@@ -84,26 +86,50 @@ class Players extends Component {
       this.setState({
         sort_by: columnToField[column],
         sort_dir: this.state.sort_by == columnToField[column] ? newSortDir : 'asc'
-      })
-
-      loadPlayers(this.state, players => this.setState({ players }))
+      }, () => loadPlayers(this.state, players => this.setState({ players })))
     }
   }
 
   handleNameFilterChange(event) {
     const name = event.target.value
 
-    filterPlayersByName(name, players => this.setState({ players }))
+    this.setState({ name }, () => filterPlayersByName(this.state.name, players => this.setState({ players })))
+  }
+
+  previousPage() { this.handlePagination("previous") }
+  nextPage() { this.handlePagination("next") }
+
+  handlePagination(direction) {
+    const { offset, limit } = this.state
+    const newOffset = direction == "previous" ? offset - limit : offset + limit
+
+    this.setState({ offset: newOffset }, () => {
+      loadPlayers(this.state, players =>
+        this.setState({ players: players, lastPage: players.length == 0 })
+      )
+    })
+  }
+
+  generateCSV() {
+    generatePlayersCSV(this.state, result => download(result, 'players.csv', 'text/csv'));
   }
 
   render() {
     return (
-      <div class="Players">
-        <input
-          className="PlayersFilter"
-          onChange={this.handleNameFilterChange.bind(this)}
-          placeholder="Filter by Player Name"
-        />
+      <div className="Players">
+        <div className="PlayersActions">
+          <input
+            className="PlayersFilter"
+            onChange={this.handleNameFilterChange.bind(this)}
+            placeholder="Filter by Player Name"
+          />
+
+          <div className="PlayersPaginationControl">
+            <button onClick={this.generateCSV.bind(this)} className="Button ButtonGreen">Download as CSV</button>
+            <button {...this.state.offset === 0 && { disabled: true }} onClick={this.previousPage.bind(this)} class="Button ButtonBlue">Previous Page</button>
+            <button {...this.state.lastPage && { disabled: true }} onClick={this.nextPage.bind(this)} class="Button ButtonBlue">Next Page</button>
+          </div>
+        </div>
         <Table
           onHeaderClick={this.handleHeaderClick.bind(this)}
           sortableColumns={this.sortableColumns()}
