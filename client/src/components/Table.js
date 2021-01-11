@@ -22,13 +22,13 @@ const Table = ({ header, rows, onHeaderClick, sortableColumns }) => {
       </thead>
 
       <tbody className="TableBody">
-        {rows.map(row => {
+        {rows.length > 0 ? rows.map(row => {
           return (
             <tr className="TableRow">
               {row.map(col => { return <td className="TableCell">{col}</td> })}
             </tr>
           )
-        })}
+        }) : <tr className="TableRow"><td className="TableCell">No results found</td></tr>}
       </tbody>
     </table >
   )

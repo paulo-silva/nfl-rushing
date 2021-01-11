@@ -1,6 +1,7 @@
 import { Component } from "react";
-import { loadPlayers } from "../api";
+import { filterPlayersByName, loadPlayers } from "../api";
 import Table from "./Table";
+import './Players.css';
 
 class Players extends Component {
   constructor(props) {
@@ -8,6 +9,7 @@ class Players extends Component {
 
     this.state = {
       offset: 0,
+      limit: 30,
       sort_by: "",
       name: "",
       sort_dir: "asc",
@@ -88,14 +90,27 @@ class Players extends Component {
     }
   }
 
+  handleNameFilterChange(event) {
+    const name = event.target.value
+
+    filterPlayersByName(name, players => this.setState({ players }))
+  }
+
   render() {
     return (
-      <Table
-        onHeaderClick={this.handleHeaderClick.bind(this)}
-        sortableColumns={this.sortableColumns()}
-        header={this.playersHeader()}
-        rows={this.buildPlayersRows(this.state.players)}
-      />
+      <div class="Players">
+        <input
+          className="PlayersFilter"
+          onChange={this.handleNameFilterChange.bind(this)}
+          placeholder="Filter by Player Name"
+        />
+        <Table
+          onHeaderClick={this.handleHeaderClick.bind(this)}
+          sortableColumns={this.sortableColumns()}
+          header={this.playersHeader()}
+          rows={this.buildPlayersRows(this.state.players)}
+        />
+      </div>
     )
   }
 }
