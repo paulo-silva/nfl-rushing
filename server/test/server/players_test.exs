@@ -14,7 +14,8 @@ defmodule Server.PlayersTest do
       first_down_ratio: 120.5,
       fourty_yards: 42,
       fumbles: 42,
-      longest_rush: "some longest_rush",
+      longest_rush: 42,
+      longest_rush_with_touchdown: true,
       name: "some name",
       position: "some position",
       team: "some team",
@@ -31,7 +32,8 @@ defmodule Server.PlayersTest do
       first_down_ratio: 456.7,
       fourty_yards: 43,
       fumbles: 43,
-      longest_rush: "some updated longest_rush",
+      longest_rush: 42,
+      longest_rush_with_touchdown: false,
       name: "some updated name",
       position: "some updated position",
       team: "some updated team",
@@ -88,7 +90,7 @@ defmodule Server.PlayersTest do
       assert player.first_down_ratio == 120.5
       assert player.fourty_yards == 42
       assert player.fumbles == 42
-      assert player.longest_rush == "some longest_rush"
+      assert player.longest_rush == 42
       assert player.name == "some name"
       assert player.position == "some position"
       assert player.team == "some team"
@@ -112,7 +114,7 @@ defmodule Server.PlayersTest do
       assert player.first_down_ratio == 456.7
       assert player.fourty_yards == 43
       assert player.fumbles == 43
-      assert player.longest_rush == "some updated longest_rush"
+      assert player.longest_rush == 42
       assert player.name == "some updated name"
       assert player.position == "some updated position"
       assert player.team == "some updated team"
