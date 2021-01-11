@@ -1,10 +1,10 @@
-import { Component } from "react";
+import React from "react";
 import download from 'downloadjs';
 import { filterPlayersByName, loadPlayers, generatePlayersCSV } from "../api";
 import Table from "./Table";
 import './Players.css';
 
-class Players extends Component {
+class Players extends React.Component {
   constructor(props) {
     super(props);
 
@@ -80,12 +80,12 @@ class Players extends Component {
       Yrds: "total_yards"
     }
     const currentSortDir = this.state.sort_dir
-    const newSortDir = currentSortDir == 'asc' ? 'desc' : 'asc'
+    const newSortDir = currentSortDir === 'asc' ? 'desc' : 'asc'
 
     if (columnToField[column]) {
       this.setState({
         sort_by: columnToField[column],
-        sort_dir: this.state.sort_by == columnToField[column] ? newSortDir : 'asc'
+        sort_dir: this.state.sort_by === columnToField[column] ? newSortDir : 'asc'
       }, () => loadPlayers(this.state, players => this.setState({ players })))
     }
   }
@@ -101,11 +101,11 @@ class Players extends Component {
 
   handlePagination(direction) {
     const { offset, limit } = this.state
-    const newOffset = direction == "previous" ? offset - limit : offset + limit
+    const newOffset = direction === "previous" ? offset - limit : offset + limit
 
     this.setState({ offset: newOffset }, () => {
       loadPlayers(this.state, players =>
-        this.setState({ players: players, lastPage: players.length == 0 })
+        this.setState({ players: players, lastPage: players.length === 0 })
       )
     })
   }

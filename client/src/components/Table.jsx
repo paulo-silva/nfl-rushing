@@ -1,4 +1,5 @@
-import './Table.css'
+import React from 'react';
+import './Table.css';
 
 const TableHeadCell = ({ name, sortable, sortDir }) => {
 
