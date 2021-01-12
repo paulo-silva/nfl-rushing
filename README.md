@@ -56,6 +56,9 @@ If you have any questions regarding requirements, do not hesitate to email your 
 ### Installation and running this solution
 
 ```shell
+# You may need to install dependencies first
+$ docker-compose run --rm server mix deps.get
+
 # Setup server database
 $ docker-compose run --rm server mix ecto.setup
 
