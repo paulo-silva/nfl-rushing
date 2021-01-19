@@ -38,14 +38,30 @@ defmodule Server.Players do
     get_players_ordered_by(query, field, direction)
   end
 
-  def sort_players_by(query, _field, direction) do
-    get_players_ordered_by(query, "inserted_at", direction)
+  def sort_players_by(query, "total_yards_sum", direction) do
+    from(p in query, order_by: {^direction, sum(p.total_yards)})
   end
+
+  def sort_players_by(query, _field, _direction), do: query
 
   defp get_players_ordered_by(query, field, direction) do
     field = String.to_existing_atom(field)
 
     from(p in query, order_by: {^direction, ^field})
+  end
+
+  def group_by(query, ""), do: query
+
+  def group_by(query, "team") do
+    from(
+      p in query,
+      group_by: [:team],
+      select: %{
+        "team" => p.team,
+        "players" => fragment("string_agg(?, ', ')", p.name),
+        "total_yards" => sum(p.total_yards)
+      }
+    )
   end
 
   @doc """

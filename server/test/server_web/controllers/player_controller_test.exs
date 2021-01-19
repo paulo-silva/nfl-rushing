@@ -50,6 +50,7 @@ defmodule PlayerControllerTest do
         conn
         |> get(Routes.player_path(conn, :index, name: "paulo"))
         |> json_response(200)
+
       names_in_resp = Enum.map(resp, & &1["name"])
 
       assert Enum.all?(expected_result_names, &Enum.member?(names_in_resp, &1))
@@ -74,6 +75,28 @@ defmodule PlayerControllerTest do
 
       assert length(resp) == 1
       assert [%{"name" => "Todd"}] = resp
+    end
+
+    test "allow to group by team", %{conn: conn} do
+      player_names = ["John", "Robby", "Todd"]
+      Enum.each(player_names, &player_fixture(%{name: &1, team: "SEA"}))
+
+      player_names_2 = ["Joao", "Paulo"]
+      Enum.each(player_names_2, &player_fixture(%{name: &1, team: "NYG"}))
+
+      resp =
+        conn
+        |> get(Routes.player_path(conn, :index, group_by: "team"))
+        |> json_response(200)
+
+      assert length(resp) == 2
+
+      assert Enum.member?(resp, %{"team" => "SEA", "players" => "John, Robby, Todd", "total_yards" => 21.0})
+      assert Enum.member?(resp, %{"team" => "NYG", "players" => "Joao, Paulo", "total_yards" => 14.0})
+    end
+
+    test "allow to sort by total yards sum based on team", %{conn: conn} do
+
     end
   end
 end

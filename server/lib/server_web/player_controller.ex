@@ -11,6 +11,7 @@ defmodule ServerWeb.PlayerController do
       |> Players.sort_players_by(params["sort_by"], sort_dir)
       |> maybe_paginate(conn, params)
       |> Players.filter_by_name(params["name"])
+      |> Players.group_by(params["group_by"])
       |> Players.list_players()
 
     render(conn, :index, players: players)

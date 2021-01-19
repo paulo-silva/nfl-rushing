@@ -15,6 +15,7 @@ async function loadPlayers(options = {}, callback = null) {
   const queryString = new URLSearchParams({
     name: options['name'] || '',
     sort_by: options['sort_by'] || null,
+    group_by: options['group_by'] || '',
     sort_dir: options['sort_dir'] || 'asc',
     limit: options['limit'] || 30,
     offset: options['offset'] || 0
